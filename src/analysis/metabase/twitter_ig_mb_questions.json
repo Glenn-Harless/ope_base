@@ -1,0 +1,164 @@
+[
+  {
+    "question_id": 1,
+    "question_name": "test",
+    "question_description": null,
+    "sql_query": "select\n    *\nfrom posts;"
+  },
+  {
+    "question_id": 2,
+    "question_name": "User followers",
+    "question_description": null,
+    "sql_query": "SELECT\n  count(DISTINCT user_id) AS user_followers\nFROM\n  public.user_followers\n"
+  },
+  {
+    "question_id": 3,
+    "question_name": "Followers Activity",
+    "question_description": null,
+    "sql_query": "select\n    COALESCE(search_query, 'Organic') as follower_source\n    , count(1) as total_acts\n    , sum(CAST(verified as INT)) as total_act_verified\n    , SUM(followers) as total_act_followers\n    , SUM(following) as total_act_following\n    , sum(posts) as total_act_posts\n    , sum(likes) as total_act_likes\nfrom user_followers\nleft join twitter_stats on user_followers.user_id = twitter_stats.user_id\nleft join users on users.datasource_id = twitter_stats.user_id\ngroup by 1\norder by 2 desc"
+  },
+  {
+    "question_id": 4,
+    "question_name": "Followers Source",
+    "question_description": null,
+    "sql_query": "select\n    COALESCE(search_query, 'Organic') as follower_source\n    , count(1) as total_acts\n    , sum(CAST(verified as INT)) as total_act_verified\n    , SUM(followers) as total_act_followers\n    , SUM(following) as total_act_following\n    , sum(posts) as total_act_posts\n    , sum(likes) as total_act_likes\nfrom user_followers\nleft join twitter_stats on user_followers.user_id = twitter_stats.user_id\nleft join users on users.datasource_id = twitter_stats.user_id\ngroup by 1\norder by 2 desc"
+  },
+  {
+    "question_id": 5,
+    "question_name": "Followers Post counts",
+    "question_description": null,
+    "sql_query": "select\n    COALESCE(search_query, 'Organic') as follower_source\n    , count(1) as total_acts\n    , sum(CAST(verified as INT)) as total_act_verified\n    , SUM(followers) as total_act_followers\n    , SUM(following) as total_act_following\n    , sum(posts) as total_act_posts\n    , sum(likes) as total_act_likes\nfrom user_followers\nleft join twitter_stats on user_followers.user_id = twitter_stats.user_id\nleft join users on users.datasource_id = twitter_stats.user_id\ngroup by 1\norder by 2 desc"
+  },
+  {
+    "question_id": 6,
+    "question_name": "Top 10 Followed accounts",
+    "question_description": null,
+    "sql_query": "SELECT name, screen_name, followers, description\nFROM public.insta_leads\nORDER BY followers DESC\nLIMIT 10;\n"
+  },
+  {
+    "question_id": 7,
+    "question_name": "Engagement Rate Analysis:",
+    "question_description": "Compare the engagement rates of different profiles to see which ones are generating the most interaction relative to their follower count.",
+    "sql_query": "SELECT name, screen_name, followers, engagement, average_likes\nFROM public.insta_leads\nWHERE followers > 1000  -- Filtering out smaller accounts for more reliable data\nORDER BY engagement DESC\nLIMIT 10;\n"
+  },
+  {
+    "question_id": 8,
+    "question_name": "Activity Insights (Post Frequency)",
+    "question_description": "This query finds accounts that have posted recently (within the last 30 days) and sorts them by how many posts they've made and their posting frequency, helping to identify actively engaging profiles.",
+    "sql_query": "SELECT name, screen_name, recent_post_count, post_frequency, last_post_date\nFROM public.insta_leads\nWHERE last_post_date >= '2023-01-01'\nORDER BY recent_post_count DESC, post_frequency DESC\nLIMIT 10;\n"
+  },
+  {
+    "question_id": 9,
+    "question_name": "Follower to Following Ratio",
+    "question_description": "Evaluate which accounts have a high followers-to-following ratio, which might indicate influence or a more engaged audience.",
+    "sql_query": "SELECT name, screen_name, followers, following, follow_ratio\nFROM public.insta_leads\nwhere followers > 1\nORDER BY follow_ratio DESC\nLIMIT 10;\n"
+  },
+  {
+    "question_id": 10,
+    "question_name": "Search Query Analysis",
+    "question_description": "Find out which search queries are bringing in profiles with high engagement or followers.",
+    "sql_query": "SELECT search_query, AVG(followers) AS avg_followers, AVG(engagement) AS avg_engagement\nFROM public.insta_leads\nGROUP BY search_query\nORDER BY avg_engagement DESC, avg_followers DESC\nlimit 25;\n"
+  },
+  {
+    "question_id": 11,
+    "question_name": "IG Raw",
+    "question_description": null,
+    "sql_query": "select\n    *\nfrom insta_leads\nlimit 100;"
+  },
+  {
+    "question_id": 12,
+    "question_name": "Top Influencers by Followers:",
+    "question_description": "clearly show which accounts have the highest followers, identifying major influencers.",
+    "sql_query": "SELECT users.name, followers\nFROM public.twitter_stats\nleft join public.users on users.datasource_id = twitter_stats.user_id\n-- where not verified or verified is null\nORDER BY followers DESC\nLIMIT 10;\n"
+  },
+  {
+    "question_id": 13,
+    "question_name": "Geographical Distribution of Top Influencers:",
+    "question_description": "shows the distribution of top influencers by their location, helping to understand geographical trends in influence and follower count.",
+    "sql_query": "SELECT u.location, COUNT(u.id) AS influencer_count, AVG(t.followers) AS avg_followers\nFROM public.twitter_stats t\nLEFT JOIN public.users u ON u.datasource_id = t.user_id\nWHERE t.followers > 1000\nand nullif(location, '') is not null\nGROUP BY u.location\nORDER BY influencer_count DESC, avg_followers DESC\n--LIMIT 10;\n"
+  },
+  {
+    "question_id": 14,
+    "question_name": "Activity and Engagement by Account Age:",
+    "question_description": "Analyzing the average posts and likes by different account age groups provides insights into how user behavior and engagement evolve over time.",
+    "sql_query": "SELECT CASE\n         WHEN u.account_age_days <= 365 THEN '0-1 year'\n         WHEN u.account_age_days <= 730 THEN '1-2 years'\n         WHEN u.account_age_days > 730 THEN 'Over 2 years'\n       END AS age_group,\n       AVG(t.posts) AS avg_posts,\n       AVG(t.likes) AS avg_likes\nFROM public.twitter_stats t\nLEFT JOIN public.users u ON u.datasource_id = t.user_id\nGROUP BY age_group\nORDER BY age_group;\n"
+  },
+  {
+    "question_id": 15,
+    "question_name": "Followers and Engagement of Verified vs Non-Verified Users:",
+    "question_description": "compares the average followers and likes between verified and non-verified users, potentially revealing the impact of account verification on user engagement and popularity.",
+    "sql_query": "SELECT u.verified, AVG(t.followers) AS avg_followers, AVG(t.likes) AS avg_likes\nFROM public.twitter_stats t\nLEFT JOIN public.users u ON u.datasource_id = t.user_id\nGROUP BY u.verified\nORDER BY avg_followers DESC;\n"
+  },
+  {
+    "question_id": 16,
+    "question_name": "User Activity and Location Correlation:",
+    "question_description": "By displaying total posts and likes by location, this analysis highlights regional differences in Twitter activity and user engagement.",
+    "sql_query": "SELECT u.location, SUM(t.posts) AS total_posts, SUM(t.likes) AS total_likes\nFROM public.twitter_stats t\nLEFT JOIN public.users u ON u.datasource_id = t.user_id\nGROUP BY u.location\nORDER BY total_posts DESC, total_likes DESC;\n"
+  },
+  {
+    "question_id": 17,
+    "question_name": "Search Query Performance by Account Verification Status:",
+    "question_description": "This visualization compares how verified versus non-verified users respond to different search queries in terms of followers and likes. It helps determine if verified users tend to have higher engagement and follower counts across different topics or keywords.",
+    "sql_query": "SELECT t.search_query, u.verified, AVG(t.followers) AS avg_followers, AVG(t.likes) AS avg_likes\nFROM public.twitter_stats t\nLEFT JOIN public.users u ON u.datasource_id = t.user_id\nGROUP BY t.search_query, u.verified\nORDER BY avg_followers DESC, avg_likes DESC\nlimit 25;\n"
+  },
+  {
+    "question_id": 18,
+    "question_name": "Top Active Subreddits by Number of Posts and Comments",
+    "question_description": "This analysis identifies which subreddits are most active in terms of posting and commenting activity, helping to pinpoint where the most interaction occurs.",
+    "sql_query": "SELECT subreddit, COUNT(id) AS total_posts, SUM(num_comments) AS total_comments\nFROM reddit.reddit_post\nGROUP BY subreddit\nORDER BY total_posts DESC, total_comments DESC\nLIMIT 10;\n"
+  },
+  {
+    "question_id": 19,
+    "question_name": "User Activity and Engagement",
+    "question_description": "This visualization tracks Reddit users who are most engaged based on their posts' total scores and comments, indicating which users are driving discussions and engagement.",
+    "sql_query": "SELECT r.name, SUM(p.num_comments) AS total_comments, SUM(p.score) AS total_score\nFROM reddit.reddit_post p\nJOIN reddit.reddit_user r ON p.author_id = r.id\nGROUP BY r.name\nORDER BY total_score DESC, total_comments DESC\nLIMIT 10;\n"
+  },
+  {
+    "question_id": 20,
+    "question_name": "Subreddit Engagement by Upvote Ratio and Comments",
+    "question_description": "A scatter plot comparing average upvote ratio to average comments per subreddit, showing which communities are both approving (high upvote ratio) and engaging (many comments).",
+    "sql_query": "SELECT subreddit, AVG(upvote_ratio) AS average_upvote_ratio, AVG(num_comments) AS average_comments\nFROM reddit.reddit_post\nGROUP BY subreddit\nORDER BY average_upvote_ratio DESC, average_comments DESC\nLIMIT 10;\n"
+  },
+  {
+    "question_id": 21,
+    "question_name": "Impact of Verified Email on User Activity",
+    "question_description": "Examines whether having a verified email correlates with higher karma scores, potentially indicating more active or trusted users.",
+    "sql_query": "SELECT has_verified_email, AVG(link_karma + comment_karma) AS average_karma\nFROM reddit.reddit_user\nGROUP BY has_verified_email\n"
+  },
+  {
+    "question_id": 22,
+    "question_name": "Subreddit Engagement by Upvote Ratio and Comments Table",
+    "question_description": null,
+    "sql_query": "SELECT subreddit, AVG(upvote_ratio) AS average_upvote_ratio, AVG(num_comments) AS average_comments\nFROM reddit.reddit_post\nGROUP BY subreddit\nORDER BY average_upvote_ratio DESC, average_comments DESC\nLIMIT 10;\n"
+  },
+  {
+    "question_id": 23,
+    "question_name": "Post Engagement Analysis",
+    "question_description": "Analyze the performance of each post based on likes and shares.",
+    "sql_query": "SELECT \n    account, DATE(created_at) as post_dt, SUM(likes_count) as daily_likes, SUM(share_count) as daily_shares\nFROM \n    public.posts \nWhere account = 'Lost_in_Tropez'\nGroup by 1, 2\nORDER BY \n    DATE(created_at) DESC;\n"
+  },
+  {
+    "question_id": 24,
+    "question_name": "Follower Growth Over Time",
+    "question_description": "Track follower growth for both accounts over time to see how well promotional strategies are working.",
+    "sql_query": "SELECT \n    DATE(created_date) AS date, COUNT(*) AS new_followers \nFROM \n    public.user_followers \nWHERE account = 'lit'\nGROUP BY date\nORDER BY \n    date;\n"
+  },
+  {
+    "question_id": 25,
+    "question_name": "Analysis of Friends Interaction",
+    "question_description": "Understand how many accounts bots have followed over time and their last update status.",
+    "sql_query": "SELECT \n   -- account, \n    DATE(request_sent) AS date, COUNT(*) AS total_requests_sent\nFROM \n    public.user_friends\nWHERE \n    account IN ('lit')--, 'ope')\nGROUP BY \n    -- account,\n    date\nORDER BY \n    date;\n"
+  },
+  {
+    "question_id": 26,
+    "question_name": "Tropez Song Twitter Performance",
+    "question_description": null,
+    "sql_query": "SELECT \n    Case when sl.song_name = 'Bonobo - Black Sands (Lost in Tropez Remix)' then 'Black Sands (Remix)' else song_name end as song_name, \n    SUM(p.likes_count) AS total_likes,\n    SUM(p.share_count) AS total_shares,\n    SUM(p.likes_count + p.share_count) AS total_engagement\nFROM \n    public.song_links sl\nJOIN \n    public.posts p ON sl.song_link = p.song_link --AND sl.account = p.account\n\nGROUP BY \n    sl.song_name\nORDER BY \n    total_engagement DESC\n    limit 10;\n"
+  },
+  {
+    "question_id": 27,
+    "question_name": "Comparative Engagement Analysis",
+    "question_description": "Compare engagement metrics across different accounts to identify which account is performing better.",
+    "sql_query": "SELECT \n    account, AVG(likes_count) AS average_likes, AVG(share_count) AS average_shares\nFROM \n    public.posts\n\nGROUP BY \n    account;\n"
+  }
+]

@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  postgres:
+    build:
+      context: ./
+      dockerfile: db/db.Dockerfile
+    environment:
+      POSTGRES_DB: ope_market
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  metabase:
+    image: metabase/metabase:latest
+    restart: unless-stopped
+    environment:
+      MB_DB_TYPE: postgres
+      MB_DB_DBNAME: ope_market
+      MB_DB_PORT: 5432
+      MB_DB_USER: postgres
+      MB_DB_PASS: postgres
+      MB_DB_HOST: postgres
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+
+  python-service:
+    build:
+      context: .
+      dockerfile: app/app.Dockerfile
+    volumes:
+      - ./notebooks:/app/notebooks
+      - ./packages:/app/packages
+    ports:
+      - "8888:8888"
+    depends_on:
+      - postgres
+
+volumes:
+  db_data:
