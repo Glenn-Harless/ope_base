@@ -25,6 +25,17 @@ git clone https://github.com/yourusername/yourprojectname.git
 cd yourprojectname
 ```
 
+## Database Setup
+
+Before starting the application, you will need to set up the database using the provided SQL dump file. Follow these steps to download and save the file to data/dumps/dump-ope_market-202404302111.sql
+
+### Downloading the Database Dump
+
+The database dump is hosted on Dropbox. You can download it by following the link below:
+
+[Download Database Dump](https://www.dropbox.com/scl/fi/nfulnfshgnnmfj3a7w9pr/dump-ope_market-202404302111.sql?rlkey=ywa2dkwoo10z59ouewf39btkk&st=zn22orkz&dl=0)
+
+
 # Build and run the Docker containers
 docker-compose up --build
 This command builds the images if they do not exist and starts the containers.
