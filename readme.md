@@ -34,22 +34,30 @@ Access Jupyter Notebook: Open your web browser and go to http://localhost:8888 t
 View Metabase Dashboards: Go to http://localhost:3000 to access Metabase and visualize the data.
 Interact with PostgreSQL: The PostgreSQL database is accessible on localhost:5432.
 
-# Directory Structure
-/app: Contains the Dockerfile for the Python environment and the Jupyter notebooks.
-/data: Directory for database dumps and other data files.
-/db: Contains the Dockerfile for setting up the PostgreSQL database.
-/dbt: Contains dbt files for transforming your data using SQL.
-/logs: Logs from the application.
-/notebooks: Jupyter notebooks for analysis.
-/reports: Generated PDF reports from the analytics and machine learning results.
-/src: Source code for the project.
-/analysis: Scripts for data analysis.
-/data_ingestion: Scripts for ingesting data into the database.
-/machine_learning: Scripts for training and prediction models.
-/tests: Test cases for the application.
+# Jupyter Notebooks Overview
 
-# Contributing
-Please read CONTRIBUTING.md for details on our code of conduct, and the process for submitting pull requests to us.
+Each Jupyter notebook in this project serves a specific purpose in analyzing and extracting insights from social media data. Here are the details for each notebook:
+
+### Bot Detection Notebook
+
+- **Purpose**: Utilize the Isolation Forest algorithm to detect potential bots on various social media platforms. 
+- **Key Analyses**:
+  - Analyze patterns in activity frequency and engagement rates.
+  - Identify unusual behavior indicative of bots, enhancing the integrity of social media interactions.
+
+### User Segmentation Notebook
+
+- **Purpose**: Segment social media users by clustering them based on their engagement patterns. This segmentation supports targeted marketing and community building efforts.
+- **Key Analyses**:
+  - Cluster influential users to identify key demographics and user groups.
+  - Utilize engagement data to tailor marketing strategies effectively.
+
+### Trend Analysis Notebook
+
+- **Purpose**: Examine the fluctuations in user engagement metrics over time, such as likes, shares, and comments, to identify trends and patterns.
+- **Key Analyses**:
+  - Track engagement trends to determine when users are most active.
+  - Analyze the factors that influence peaks and troughs in user engagement, providing actionable insights for content strategists and marketers.
 
 # Authors
 Glenn Harless
